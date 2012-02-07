@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 
-public class AbsExpression extends ParenExpressions
+public class ClampExpression extends ParenExpressions
 {
-    private AbsExpression ()
+    private ClampExpression ()
     {
 
     }
 
 
-    private AbsExpression (String commandName, ArrayList<Expression> expArray)
+    private ClampExpression (String commandName, ArrayList<Expression> expArray)
     {
         super(commandName, expArray);
     }
@@ -30,7 +30,7 @@ public class AbsExpression extends ParenExpressions
                 EXPRESSION_BEGIN_REGEX.matcher(toParse.getInput());
             expMatcher2.find(toParse.getPos());
             String commandName = expMatcher2.group(1);
-            return commandName.equals("abs");
+            return commandName.equals("clamp");
         }
         return false;
     }
@@ -51,26 +51,34 @@ public class AbsExpression extends ParenExpressions
             ExpArray.add(toParse.parseExpression());
         }
         toParse.updatePos(1);
-        return new AbsExpression(commandName, ExpArray);
+        return new ClampExpression(commandName, ExpArray);
     }
 
 
     public static ExpresFactory getFactory (Parser input)
     {
-        return new ExpresFactory(new AbsExpression());
+        return new ExpresFactory(new ClampExpression());
     }
 
 
     /**
-     * Take the absolute value of one color.
+     * Clamp the component values of one color
+     * between -1 and 1, inclusive
      */
     public RGBColor evalExp (ArrayList<RGBColor> toParse, double x, double y)
     {
         checkArraySize(toParse, 1);
         RGBColor color = toParse.get(0);
-        return new RGBColor(Math.abs(color.getRed()),
-                            Math.abs(color.getGreen()),
-                            Math.abs(color.getBlue()));
+        double red = color.getRed();
+        if (red > 1) red = 1;
+        if (red < -1) red = -1;
+        double green = color.getGreen();
+        if (green > 1) green = 1;
+        if (green < -1) green = -1;
+        double blue = color.getBlue();
+        if (blue > 1) blue = 1;
+        if (blue < -1) blue = -1;
+        return new RGBColor(red, green, blue);
     }
 
 }

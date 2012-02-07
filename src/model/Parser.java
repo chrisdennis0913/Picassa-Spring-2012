@@ -1,46 +1,59 @@
 package model;
 
 import java.util.ArrayList;
-//import java.util.regex.Matcher;
-//import java.util.regex.Pattern;
+import java.util.Map;
+// import java.util.regex.Matcher;
+// import java.util.regex.Pattern;
+import java.util.TreeMap;
+
 
 /**
- * Parses a string into an expression tree based on rules for arithmetic.
- * 
- * Due to the nature of the language being parsed, a recursive descent parser is
- * used http://en.wikipedia.org/wiki/Recursive_descent_parser
+ * Parses a string into an expression tree based on rules for arithmetic. Due to
+ * the nature of the language being parsed, a recursive descent parser is used
+ * http://en.wikipedia.org/wiki/Recursive_descent_parser
  * 
  * @author former student solution
  * @author Robert C. Duvall (added comments, exceptions, some functions)
  */
-public class Parser {
+public class Parser
+{
 
     // state of the parser
     private int myCurrentPosition;
     private String myInput;
+    private Map<String, Expression> letMap;
+
+
+    public Parser ()
+    {
+        letMap = new TreeMap<String, Expression>();
+    }
+
 
     /**
      * Converts given string into expression tree.
      * 
-     * @param input
-     *            expression given in the language to be parsed
+     * @param input expression given in the language to be parsed
      * @return expression tree representing the given formula
      */
-    public Expression makeExpression(String input) {
+    public Expression makeExpression (String input)
+    {
         myInput = input;
         myCurrentPosition = 0;
         Expression result = parseExpression();
         skipWhiteSpace();
-        if (notAtEndOfString()) {
-            throw new ParserException(
-                    "Unexpected characters at end of the string: "
-                            + myInput.substring(myCurrentPosition),
-                    ParserException.Type.EXTRA_CHARACTERS);
+        if (notAtEndOfString())
+        {
+            throw new ParserException("Unexpected characters at end of the string: " +
+                                              myInput.substring(myCurrentPosition),
+                                      ParserException.Type.EXTRA_CHARACTERS);
         }
         return result;
     }
 
-    public Expression parseExpression() {
+
+    public Expression parseExpression ()
+    {
         skipWhiteSpace();
         ArrayList<ExpresFactory> expList = new ArrayList<ExpresFactory>();
         expList.add(ExpExpression.getFactory(this));
@@ -68,38 +81,76 @@ public class Parser {
         expList.add(PerlGrayExpression.getFactory(this));
         expList.add(PerlColorExpression.getFactory(this));
         expList.add(WrapExpression.getFactory(this));
+        expList.add(ClampExpression.getFactory(this));
+        expList.add(LetExpression.getFactory(this));
+        expList.add(LettedExpression.getFactory(this));
 
-        
-        
-        for (ExpresFactory expFact: expList){
-            if (expFact.isThisKindOfExp(this.myInput, this.myCurrentPosition))
+        for (ExpresFactory expFact : expList)
+        {
+            if (expFact.isThisKindOfExp(this))
+            {
                 return expFact.parseExp(this);
+            }
         }
-        throw new ParserException("Unexpected expression type "
-                + myCurrentPosition);
+        throw new ParserException("Unexpected expression type " +
+                                  myCurrentPosition);
     }
-        
-    private void skipWhiteSpace() {
-        while (notAtEndOfString() && Character.isWhitespace(currentCharacter())) {
+
+
+    private void skipWhiteSpace ()
+    {
+        while (notAtEndOfString() && Character.isWhitespace(currentCharacter()))
+        {
             myCurrentPosition++;
         }
     }
 
-    public char currentCharacter() {
+
+    public char currentCharacter ()
+    {
         return myInput.charAt(myCurrentPosition);
     }
 
-    private boolean notAtEndOfString() {
+
+    public boolean notAtEndOfString ()
+    {
         return myCurrentPosition < myInput.length();
     }
-    public void updatePos(int numDifference){
-        if (numDifference>= 0)
-            myCurrentPosition += numDifference;
+
+
+    public void updatePos (int numDifference)
+    {
+        if (numDifference >= 0) myCurrentPosition += numDifference;
     }
-    public int getPos(){
+
+
+    public int getPos ()
+    {
         return myCurrentPosition;
     }
-    public String getInput(){
+
+
+    public String getInput ()
+    {
         return myInput;
+    }
+
+
+    public Map<String, Expression> getMap ()
+    {
+        return letMap;
+    }
+
+
+    public void updateMap (String commandName, Expression letExp)
+    {
+        if (letMap.containsKey(commandName)) if (letMap.get(commandName) == letExp) return;
+        letMap.put(commandName, letExp);
+    }
+
+
+    public void removeMyVar (String commandName)
+    {
+        letMap.remove(commandName);
     }
 }

@@ -1,44 +1,77 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import model.util.PerlinNoise;
 
-public class PerlColorExpression extends ParenExpressions {
-    private PerlColorExpression() {
+
+public class PerlColorExpression extends ParenExpressions
+{
+    private PerlColorExpression ()
+    {
 
     }
 
-    private PerlColorExpression(String commandName,
-            ArrayList<Expression> expArray) {
+
+    private PerlColorExpression (String commandName,
+                                 ArrayList<Expression> expArray)
+    {
         super(commandName, expArray);
     }
 
+    protected static final Pattern EXPRESSION_BEGIN_REGEX =
+        Pattern.compile("\\(([A-Za-z]+)");
+
+
     @Override
-    public boolean isThisKindOfExp(String toParse, int currentPos) {
-        return (toParse.substring(currentPos).startsWith("(perlinColor"));
+    public boolean isThisKindOfExp (Parser toParse)
+    {
+        Matcher expMatcher =
+            EXPRESSION_BEGIN_REGEX.matcher(toParse.getInput()
+                                                  .substring(toParse.getPos()));
+        if (expMatcher.lookingAt())
+        {
+            Matcher expMatcher2 =
+                EXPRESSION_BEGIN_REGEX.matcher(toParse.getInput());
+            expMatcher2.find(toParse.getPos());
+            String commandName = expMatcher2.group(1);
+            return commandName.equals("perlinColor");
+        }
+        return false;
     }
 
-    public Expression parseExp(Parser toParse) {
+
+    public Expression parseExp (Parser toParse)
+    {
         String input = toParse.getInput();
         int firstPos = toParse.getPos();
-        String commandName = input.substring(firstPos, firstPos + 12);
+        Matcher expMatcher = EXPRESSION_BEGIN_REGEX.matcher(input);
+        expMatcher.find(firstPos);
+        String commandName = expMatcher.group(1);
+        int endPos = expMatcher.end();
         ArrayList<Expression> ExpArray = new ArrayList<Expression>();
-        toParse.updatePos(12);
-        while (toParse.currentCharacter() != ')') {
+        toParse.updatePos(endPos - firstPos);
+        while (toParse.currentCharacter() != ')')
+        {
             ExpArray.add(toParse.parseExpression());
         }
         toParse.updatePos(1);
         return new PerlColorExpression(commandName, ExpArray);
     }
 
-    public static ExpresFactory getFactory(Parser input) {
+
+    public static ExpresFactory getFactory (Parser input)
+    {
         return new ExpresFactory(new PerlColorExpression());
     }
 
+
     /**
-     * Inverse one color.
+     * Make pseudo-random color using two inputs
      */
-    public RGBColor evalExp(ArrayList<RGBColor> toParse, double x, double y) {
+    public RGBColor evalExp (ArrayList<RGBColor> toParse, double x, double y)
+    {
         checkArraySize(toParse, 2);
         RGBColor left = toParse.get(0);
         RGBColor right = toParse.get(1);

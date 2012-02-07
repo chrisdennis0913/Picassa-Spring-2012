@@ -3,29 +3,51 @@ package model;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
-public class XExpression extends VarExpression {
-    private XExpression() {
+
+public class XExpression extends VarExpression
+{
+    private XExpression ()
+    {
         super("x");
     }
 
+
     /**
-     * Combine two colors by multiplying their components.
+     * Return a color based on the current x value
      */
-    public RGBColor evalExp(ArrayList<RGBColor> toParse, double x, double y) {
+    public RGBColor evalExp (ArrayList<RGBColor> toParse, double x, double y)
+    {
         return new RGBColor(x, x, x);
     }
 
-    public static ExpresFactory getFactory(Parser input) {
+
+    public static ExpresFactory getFactory (Parser input)
+    {
         return new ExpresFactory(new XExpression());
     }
 
-    @Override
-    public boolean isThisKindOfExp(String toParse, int currentPos) {
-        return toParse.charAt(currentPos) == 'x';
-    }
 
     @Override
-    public Expression parseExp(Parser toParse) {
+    public boolean isThisKindOfExp (Parser toParse)
+    {
+        Matcher expMatcher =
+            VARIABLE_BEGIN_REGEX.matcher(toParse.getInput()
+                                                .substring(toParse.getPos()));
+        if (expMatcher.lookingAt())
+        {
+            Matcher expMatcher2 =
+                VARIABLE_BEGIN_REGEX.matcher(toParse.getInput());
+            expMatcher2.find(toParse.getPos());
+            String commandName = expMatcher2.group(0);
+            return commandName.equals("x");
+        }
+        return false;
+    }
+
+
+    @Override
+    public Expression parseExp (Parser toParse)
+    {
         String input = toParse.getInput();
         int firstPos = toParse.getPos();
         Matcher varMatcher = VARIABLE_BEGIN_REGEX.matcher(input);
