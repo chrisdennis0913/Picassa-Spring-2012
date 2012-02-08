@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.Dimension;
+import expressions.Expression;
 
 
 /**

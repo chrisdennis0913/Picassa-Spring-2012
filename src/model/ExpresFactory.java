@@ -1,5 +1,7 @@
 package model;
 
+import expressions.Expression;
+
 public class ExpresFactory
 {
     private Expression myExpres;

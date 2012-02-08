@@ -5,6 +5,35 @@ import java.util.Map;
 // import java.util.regex.Matcher;
 // import java.util.regex.Pattern;
 import java.util.TreeMap;
+import expressions.ATanExpression;
+import expressions.AbsExpression;
+import expressions.CeilExpression;
+import expressions.ClampExpression;
+import expressions.ColorExpression;
+import expressions.CosExpression;
+import expressions.DivExpression;
+import expressions.ExpExpression;
+import expressions.Expression;
+import expressions.FloorExpression;
+import expressions.LetExpression;
+import expressions.LettedExpression;
+import expressions.LogExpression;
+import expressions.MinusExpression;
+import expressions.ModExpression;
+import expressions.MultExpression;
+import expressions.NegExpression;
+import expressions.NumberExpression;
+import expressions.PerlColorExpression;
+import expressions.PerlGrayExpression;
+import expressions.PlusExpression;
+import expressions.RandomExpression;
+import expressions.RgbToYCrCbExpression;
+import expressions.SinExpression;
+import expressions.TanExpression;
+import expressions.WrapExpression;
+import expressions.XExpression;
+import expressions.YCrCbtoRGBExpression;
+import expressions.YExpression;
 
 
 /**
