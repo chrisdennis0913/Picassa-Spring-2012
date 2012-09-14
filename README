@@ -15,6 +15,8 @@ should be clamped to within the range -1 to 1. By default, like the colors, the 
 image over X and Y is from -1 to 1. The upper left corner of the image will be (-1,-1) and 
 the lower right corner will be (1, 1).
 
+To try it out, the jar file is in the src folder.
+
 Variables
 x         //x coordinate of current pixel (between -1 and 1)
 y         //y coordinate of current pixel (between -1 and 1)
@@ -46,9 +48,9 @@ Two Expression Operators
 Three Expression Operators
 (color expr expr expr)     //an RGB Color with range of -1 to 1 for each
 
-Some cool samples can be seen by entering:
+Some cool samples can be seen by entering (just copy and paste one at a time):
 (mod (let myVar x (plus y myVar) (perlinBW y y))
-(color (mod (let myVar x (plus y myVar) y) (sin (div 3 x)) (exp perlinColor x y) y))
+(color (mod (let myVar x (plus y myVar) y) (sin (div 3 x)) (exp (perlinColor x y) y))
 	let is a special command to let a variable like myVar represent whatever comes immediately after, e.g. x
 (color (mod (let myVar x (plus y myVar) y) (tan (mul 3 x)) (exp (perlinColor x y) y))
 (mod (let myVar x (plus y myVar) (atan y))
@@ -56,4 +58,4 @@ Some cool samples can be seen by entering:
 (color (plus (exp x y) x) (mod (minus x y) y) (minus (div x y) y))
 (color (mod (exp y x) x) (mod (plus x y) y) (minus (div x y) x))
 (color (minus y (mod x y)) x (mul x y))
-(neg (abs (color (plus x y) 1 1 )))
+(neg (abs (color (plus x y) 1 1)))
