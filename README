@@ -1,1 +1,59 @@
-yay this is fantastic
+First project of the Spring 2012 semester.
+
+Our assignment was to write an arithmetic interpreter that allows users to enter, change, 
+combine, and evaluate arithmetic expressions interactively.We worked individually to create 
+an environment that helps artists use mathematical expressions to generate pictures. Each 
+time the user enters a complete expression by pressing return, it should be evaluated and 
+the resulting image displayed for the user, then the user should be prompted to enter another. 
+This is the so-called read-eval-print loop used in Scheme, Lisp, Smalltalk and other 
+interpreted programming languages.
+For this program, a color represents three real numbers, one each for the red, green and blue 
+component, where the component values range from -1 to 1. For example, [-1,-1,-1] is black, 
+[1,-1,-1] is red, and [1,1,-1] is yellow. During computation of an expression, the value of 
+each component should not be restricted to this range, but the final result of the expression 
+should be clamped to within the range -1 to 1. By default, like the colors, the domain of the 
+image over X and Y is from -1 to 1. The upper left corner of the image will be (-1,-1) and 
+the lower right corner will be (1, 1).
+
+Variables
+x         //x coordinate of current pixel (between -1 and 1)
+y         //y coordinate of current pixel (between -1 and 1)
+
+One Expression Operators
+(neg expr)		     //inverts a given color
+(random)            // random color
+(floor expr)             // round down
+(ceil expr)              // round up
+(abs expr)               // absolute value
+(clamp expr)             // clamp results to [-1, 1]
+(wrap expr)              // wrap results around [-1, 1] (i.e., 1.5 -> -0.5)
+(sin expr)               // sine, evaluate each component of color as if it were a radian value
+(cos expr)               // cosine, evaluate each component of color as if it were a radian value
+(tan expr)               // tangent, evaluate each component of color as if it were a radian value
+(atan expr)              // arc tangent
+(log expr)               // log (base e)
+(rgbToYCrCb expr)        // convert color to luminance / chrominance space
+(yCrCbtoRGB expr)        // convert color to RGB from luminance / chrominance space
+
+Two Expression Operators
+(plus  expr expr)      //adds two expressions
+(minus expr expr)      //subtracts two expressions
+(mul expr expr)        //multiplies two expressions
+(div expr expr)        //divides two expressions
+(perlinColor expr expr)  // create random color based on two given values
+(perlinBW expr expr)     // create grey scale color based on two given values
+
+Three Expression Operators
+(color expr expr expr)     //an RGB Color with range of -1 to 1 for each
+
+Some cool samples can be seen by entering:
+(mod (let myVar x (plus y myVar) (perlinBW y y))
+(color (mod (let myVar x (plus y myVar) y) (sin (div 3 x)) (exp perlinColor x y) y))
+	let is a special command to let a variable like myVar represent whatever comes immediately after, e.g. x
+(color (mod (let myVar x (plus y myVar) y) (tan (mul 3 x)) (exp (perlinColor x y) y))
+(mod (let myVar x (plus y myVar) (atan y))
+(color (sin (mul 50 y)) (sin (mul 50 x)) (sin (plus y x)))
+(color (plus (exp x y) x) (mod (minus x y) y) (minus (div x y) y))
+(color (mod (exp y x) x) (mod (plus x y) y) (minus (div x y) x))
+(color (minus y (mod x y)) x (mul x y))
+(neg (abs (color (plus x y) 1 1 )))

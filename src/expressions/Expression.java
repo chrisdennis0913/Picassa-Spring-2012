@@ -64,8 +64,8 @@ public abstract class Expression
 
 
     /**
-     * This method is called in Model.
-     * Overridden in the LetExpression
+     * This method is called in Model. Overridden in the LetExpression
+     * 
      * @param y
      * @param x
      * @return value of expression
@@ -116,8 +116,8 @@ public abstract class Expression
 
 
     public abstract RGBColor evalExp (ArrayList<RGBColor> toEval,
-      double x,
-      double y);
+                                      double x,
+                                      double y);
 
 
     protected void checkArraySize (ArrayList<RGBColor> colorArray,

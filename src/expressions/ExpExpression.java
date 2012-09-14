@@ -24,7 +24,7 @@ public class ExpExpression extends ParenExpressions
     {
         String commandName = super.isThisParensExpression(toParse);
         if (commandName.equals("false")) return false;
-        return commandName.equals("exp");
+        return commandName.equals("exp"); //| commandName.equals("^");
     }
 
 
